@@ -53,12 +53,6 @@
     background: #fff; border: 1px solid rgba(0,0,0,.08); color: #374151;
   }
 
-  .collage-wrap { margin-top: 24px; }
-  .collage-wrap img {
-    width: 100%; border-radius: 16px; display: block;
-    box-shadow: 0 10px 30px rgba(0,0,0,.10);
-  }
-
   .grid {
     margin-top: 28px; margin-bottom: 40px;
     display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px;
@@ -70,9 +64,19 @@
     border: 1px solid rgba(0,0,0,.06);
     box-shadow: 0 2px 10px rgba(0,0,0,.05);
     transition: transform .2s, box-shadow .2s;
+    display: flex; flex-direction: column;
   }
   .shot:hover { transform: translateY(-4px); box-shadow: 0 10px 24px rgba(0,0,0,.12); }
-  .shot img { width: 100%; aspect-ratio: 4/3; object-fit: cover; object-position: top; display: block; }
+  .shot .pic { position: relative; overflow: hidden; }
+  .shot img {
+    width: 100%; height: 300px; object-fit: cover; object-position: top center;
+    display: block; background: #fff;
+  }
+  .shot .tall-mark {
+    position: absolute; right: 10px; bottom: 10px;
+    font-size: 11px; padding: 2px 8px; border-radius: 999px;
+    background: rgba(17,24,39,.62); color: #fff; letter-spacing: .5px;
+  }
   .shot .cap { padding: 10px 14px; font-size: 13.5px; color: #374151; display: flex; align-items: center; gap: 8px; }
   .shot .cap .no { font-weight: 700; font-size: 12px; opacity: .55; }
 
@@ -84,22 +88,33 @@
   footer .links a { margin-right: 16px; text-decoration: none; color: #4f46e5; }
   footer .links a:hover { text-decoration: underline; }
 
-  /* lightbox */
-  .lb {
-    position: fixed; inset: 0; z-index: 100; background: rgba(17,24,39,.92);
-    display: none; align-items: center; justify-content: center; flex-direction: column; padding: 24px;
+  /* lightbox：长图可上下滚动，保持可读宽度 */
+  .lb { position: fixed; inset: 0; z-index: 100; background: rgba(17,24,39,.94); display: none; }
+  .lb.open { display: block; }
+  .lb-scroll {
+    position: absolute; inset: 0; overflow-y: auto; overflow-x: hidden;
+    -webkit-overflow-scrolling: touch; overscroll-behavior: contain;
+    padding: 56px 0 8px;
   }
-  .lb.open { display: flex; }
-  .lb img { max-width: 92vw; max-height: 78vh; border-radius: 12px; box-shadow: 0 20px 60px rgba(0,0,0,.5); }
-  .lb .lb-cap { color: #e5e7eb; margin-top: 16px; font-size: 15px; letter-spacing: .5px; }
+  .lb-scroll img {
+    display: block; width: min(92vw, 1280px); margin: 0 auto;
+    border-radius: 8px; box-shadow: 0 20px 60px rgba(0,0,0,.5);
+  }
+  .lb-cap { text-align: center; color: #e5e7eb; padding: 14px 20px 26px; font-size: 14px; letter-spacing: .5px; }
   .lb button {
-    position: absolute; background: rgba(255,255,255,.12); color: #fff; border: none;
-    border-radius: 50%; width: 46px; height: 46px; font-size: 20px; cursor: pointer; transition: background .2s;
+    position: fixed; background: rgba(255,255,255,.14); color: #fff; border: none;
+    border-radius: 50%; width: 46px; height: 46px; font-size: 20px; cursor: pointer;
+    transition: background .2s; z-index: 101; display: flex; align-items: center; justify-content: center;
   }
-  .lb button:hover { background: rgba(255,255,255,.28); }
-  .lb .close { top: 20px; right: 24px; }
-  .lb .prev { left: 20px; top: 50%; transform: translateY(-50%); }
-  .lb .next { right: 20px; top: 50%; transform: translateY(-50%); }
+  .lb button:hover { background: rgba(255,255,255,.32); }
+  .lb .close { top: 14px; right: 18px; }
+  .lb .prev { left: 12px; top: 50%; transform: translateY(-50%); }
+  .lb .next { right: 12px; top: 50%; transform: translateY(-50%); }
+  @media (max-width: 600px) {
+    .lb .prev, .lb .next { top: auto; bottom: 18px; transform: none; }
+    .lb .prev { left: 20px; } .lb .next { right: 20px; }
+    .lb-scroll { padding-top: 48px; }
+  }
 </style>
 </head>
 <body>
@@ -117,7 +132,7 @@
 
 <header class="hero">
   <h2>三个完整项目 · 界面设计与功能展示</h2>
-  <p>扫码即可浏览各项目核心界面。所有界面均为真实运行的系统截图，点击任意图片可放大查看。</p>
+  <p>扫码即可浏览各项目核心界面，均为真实运行的系统截图。点击任意卡片可放大查看完整页面，长图支持上下滑动。</p>
 </header>
 
 <!-- ==================== 项目一：用药雷达 ==================== -->
@@ -131,19 +146,16 @@
   <div class="chips">
     <span class="chip">React 18</span><span class="chip">Spring Boot 3</span><span class="chip">MySQL 8</span><span class="chip">Redis</span><span class="chip">DeepSeek LLM</span>
   </div>
-  <div class="collage-wrap">
-    <img src="images/medication-radar.png" alt="用药雷达界面拼图" loading="lazy">
-  </div>
   <div class="grid" data-repo="medication-radar">
-    <div class="shot"><img src="images/medication-radar/01-welcome.png" alt="欢迎页" loading="lazy"><div class="cap"><span class="no">01</span>欢迎页 · 产品介绍</div></div>
-    <div class="shot"><img src="images/medication-radar/02-analyze-form.png" alt="用药分析表单" loading="lazy"><div class="cap"><span class="no">02</span>用药分析 · 信息填写</div></div>
-    <div class="shot"><img src="images/medication-radar/03-report-patient.png" alt="患者报告 风险评分" loading="lazy"><div class="cap"><span class="no">03</span>患者报告 · 风险评分与 AI 外部检索</div></div>
-    <div class="shot"><img src="images/medication-radar/04-report-danger.png" alt="患者报告 危险信号" loading="lazy"><div class="cap"><span class="no">04</span>患者报告 · 危险信号与应急指引</div></div>
-    <div class="shot"><img src="images/medication-radar/05-report-family.png" alt="患者报告 严重相互作用警示" loading="lazy"><div class="cap"><span class="no">05</span>患者报告 · 家属说明与严重相互作用警示</div></div>
-    <div class="shot"><img src="images/medication-radar/06-report-doctor.png" alt="医生视图 评分明细" loading="lazy"><div class="cap"><span class="no">06</span>医生视图 · 评分明细与专业分析</div></div>
-    <div class="shot"><img src="images/medication-radar/07-doctor-rules.png" alt="医生视图 风险评分规则" loading="lazy"><div class="cap"><span class="no">07</span>医生视图 · 风险评分规则与依据</div></div>
-    <div class="shot"><img src="images/medication-radar/08-knowledge.png" alt="药品知识库" loading="lazy"><div class="cap"><span class="no">08</span>药品知识库</div></div>
-    <div class="shot"><img src="images/medication-radar/09-drug-detail.png" alt="药品详情" loading="lazy"><div class="cap"><span class="no">09</span>药品详情页</div></div>
+    <div class="shot"><div class="pic"><img src="images/medication-radar/thumb/01-welcome.jpg" data-full="images/medication-radar/01-welcome.jpg" alt="欢迎页" loading="lazy" decoding="async"></div><div class="cap"><span class="no">01</span>欢迎页 · 产品定位</div></div>
+    <div class="shot"><div class="pic"><img src="images/medication-radar/thumb/02-analyze-form.jpg" data-full="images/medication-radar/02-analyze-form.jpg" alt="用药分析表单" loading="lazy" decoding="async"></div><div class="cap"><span class="no">02</span>用药分析 · 信息填写</div></div>
+    <div class="shot"><div class="pic"><img src="images/medication-radar/thumb/03-knowledge.jpg" data-full="images/medication-radar/03-knowledge.jpg" alt="药品知识库" loading="lazy" decoding="async"><span class="tall-mark">长图</span></div><div class="cap"><span class="no">03</span>药品知识库 · 301 种药品档案</div></div>
+    <div class="shot"><div class="pic"><img src="images/medication-radar/thumb/04-interactions.jpg" data-full="images/medication-radar/04-interactions.jpg" alt="相互作用规则库" loading="lazy" decoding="async"><span class="tall-mark">长图</span></div><div class="cap"><span class="no">04</span>相互作用规则库 · 46 组规则</div></div>
+    <div class="shot"><div class="pic"><img src="images/medication-radar/thumb/05-drug-detail.jpg" data-full="images/medication-radar/05-drug-detail.jpg" alt="药品详情" loading="lazy" decoding="async"><span class="tall-mark">长图</span></div><div class="cap"><span class="no">05</span>药品详情 · 完整档案（华法林）</div></div>
+    <div class="shot"><div class="pic"><img src="images/medication-radar/thumb/06-report-patient.jpg" data-full="images/medication-radar/06-report-patient.jpg" alt="患者报告" loading="lazy" decoding="async"><span class="tall-mark">长图</span></div><div class="cap"><span class="no">06</span>患者报告 · 风险评分与用药建议</div></div>
+    <div class="shot"><div class="pic"><img src="images/medication-radar/thumb/07-report-doctor.jpg" data-full="images/medication-radar/07-report-doctor.jpg" alt="医生视图报告" loading="lazy" decoding="async"><span class="tall-mark">长图</span></div><div class="cap"><span class="no">07</span>医生视图 · 评分明细与专业分析</div></div>
+    <div class="shot"><div class="pic"><img src="images/medication-radar/thumb/08-history.jpg" data-full="images/medication-radar/08-history.jpg" alt="历史报告" loading="lazy" decoding="async"></div><div class="cap"><span class="no">08</span>历史报告管理</div></div>
+    <div class="shot"><div class="pic"><img src="images/medication-radar/thumb/09-timeline.jpg" data-full="images/medication-radar/09-timeline.jpg" alt="健康时间线" loading="lazy" decoding="async"></div><div class="cap"><span class="no">09</span>健康时间线</div></div>
   </div>
 </section>
 
@@ -154,20 +166,18 @@
     <h3>证件管家</h3>
     <span class="repo">certificates-Manager</span>
   </div>
-  <p class="proj-desc">证件有效期管理与续办提醒工具。集中管理身份证、护照、驾驶证等各类证件，签发日期 + 年限自动计算到期日；提醒引擎按 90/30/7 天分级预警，数据库唯一索引保证幂等、绝不重复打扰；内置覆盖全国 31 个省级行政区（含港澳台）的官方续办指南，一键直达各省政务门户。</p>
+  <p class="proj-desc">证件有效期管理与续办提醒工具。集中管理身份证、护照、驾驶证等各类证件，签发日期 + 年限自动计算到期日；提醒引擎按 90/30/7 天分级预警，数据库唯一索引保证幂等、绝不重复打扰；内置覆盖全国 31 个省级行政区（含港澳台）的官方续办指南，切换省份后入口直达本省政务平台。</p>
   <div class="chips">
     <span class="chip">Vue 3</span><span class="chip">FastAPI</span><span class="chip">MySQL 8</span><span class="chip">Redis</span><span class="chip">AES-256-GCM 加密</span>
   </div>
-  <div class="collage-wrap">
-    <img src="images/certificates-Manager.png" alt="证件管家界面拼图" loading="lazy">
-  </div>
   <div class="grid" data-repo="certificates-Manager">
-    <div class="shot"><img src="images/certificates-Manager/01-dashboard.png" alt="仪表盘" loading="lazy"><div class="cap"><span class="no">01</span>首页仪表盘 · 到期统计与过期预警</div></div>
-    <div class="shot"><img src="images/certificates-Manager/02-add-autocalc.png" alt="添加证件 自动计算到期日" loading="lazy"><div class="cap"><span class="no">02</span>添加证件 · 到期日自动计算</div></div>
-    <div class="shot"><img src="images/certificates-Manager/03-documents.png" alt="证件管理" loading="lazy"><div class="cap"><span class="no">03</span>我的证件 · 智能筛选</div></div>
-    <div class="shot"><img src="images/certificates-Manager/04-calendar.png" alt="续办日历" loading="lazy"><div class="cap"><span class="no">04</span>续办日历</div></div>
-    <div class="shot"><img src="images/certificates-Manager/05-reminders.png" alt="提醒中心 分级提醒" loading="lazy"><div class="cap"><span class="no">05</span>提醒中心 · 90/30/7 天分级提醒</div></div>
-    <div class="shot"><img src="images/certificates-Manager/06-guides.png" alt="办理指南" loading="lazy"><div class="cap"><span class="no">06</span>全国续办办理指南</div></div>
+    <div class="shot"><div class="pic"><img src="images/certificates-Manager/thumb/01-dashboard.jpg" data-full="images/certificates-Manager/01-dashboard.jpg" alt="仪表盘" loading="lazy" decoding="async"></div><div class="cap"><span class="no">01</span>首页仪表盘 · 到期统计与过期预警</div></div>
+    <div class="shot"><div class="pic"><img src="images/certificates-Manager/thumb/02-add-autocalc.jpg" data-full="images/certificates-Manager/02-add-autocalc.jpg" alt="添加证件" loading="lazy" decoding="async"><span class="tall-mark">长图</span></div><div class="cap"><span class="no">02</span>添加证件 · 到期日自动计算</div></div>
+    <div class="shot"><div class="pic"><img src="images/certificates-Manager/thumb/03-documents.jpg" data-full="images/certificates-Manager/03-documents.jpg" alt="我的证件" loading="lazy" decoding="async"></div><div class="cap"><span class="no">03</span>我的证件 · 智能筛选</div></div>
+    <div class="shot"><div class="pic"><img src="images/certificates-Manager/thumb/04-calendar.jpg" data-full="images/certificates-Manager/04-calendar.jpg" alt="到期日历" loading="lazy" decoding="async"></div><div class="cap"><span class="no">04</span>到期日历</div></div>
+    <div class="shot"><div class="pic"><img src="images/certificates-Manager/thumb/05-reminders.jpg" data-full="images/certificates-Manager/05-reminders.jpg" alt="提醒中心" loading="lazy" decoding="async"></div><div class="cap"><span class="no">05</span>提醒中心 · 90/30/7 天分级提醒</div></div>
+    <div class="shot"><div class="pic"><img src="images/certificates-Manager/thumb/06-guides.jpg" data-full="images/certificates-Manager/06-guides.jpg" alt="续办指南默认省份" loading="lazy" decoding="async"><span class="tall-mark">长图</span></div><div class="cap"><span class="no">06</span>续办指南 · 省份直达（广东）</div></div>
+    <div class="shot"><div class="pic"><img src="images/certificates-Manager/thumb/07-guides-shanghai.jpg" data-full="images/certificates-Manager/07-guides-shanghai.jpg" alt="续办指南切换上海" loading="lazy" decoding="async"><span class="tall-mark">长图</span></div><div class="cap"><span class="no">07</span>续办指南 · 切换上海（官方入口对比）</div></div>
   </div>
 </section>
 
@@ -178,20 +188,21 @@
     <h3>店小约</h3>
     <span class="repo">shop-booking-agent</span>
   </div>
-  <p class="proj-desc">面向小微商户的 AI 预约助手。顾客用自然语言对话即可完成预约，DeepSeek Agent 通过工具调用自动查档期、锁座位、生成结构化预约单，全程无需人工介入；知识库问答覆盖营业时间、停车等常见咨询。商家端提供经营看板、档期管理与服务项目配置。</p>
+  <p class="proj-desc">面向小微商户的 AI 预约助手。顾客用自然语言对话即可完成预约，DeepSeek Agent 通过工具调用自动查档期、锁座位、生成结构化预约单，全程无需人工介入；知识库问答覆盖营业时间、停车等常见咨询。商家端提供经营看板、档期管理、服务项目配置与转人工工单。</p>
   <div class="chips">
     <span class="chip">React 18</span><span class="chip">Spring Boot 3</span><span class="chip">MySQL 8</span><span class="chip">Redis</span><span class="chip">DeepSeek Agent</span>
   </div>
-  <div class="collage-wrap">
-    <img src="images/shop-booking-agent.png" alt="店小约界面拼图" loading="lazy">
-  </div>
   <div class="grid" data-repo="shop-booking-agent">
-    <div class="shot"><img src="images/shop-booking-agent/01-chat-full.png" alt="AI 对话预约全流程" loading="lazy"><div class="cap"><span class="no">01</span>智能对话 · AI 预约全流程（自动锁座）</div></div>
-    <div class="shot"><img src="images/shop-booking-agent/02-knowledge-qa.png" alt="AI 知识问答" loading="lazy"><div class="cap"><span class="no">02</span>AI 知识问答 · 咨询与预约引导</div></div>
-    <div class="shot"><img src="images/shop-booking-agent/03-my-bookings.png" alt="我的预约" loading="lazy"><div class="cap"><span class="no">03</span>我的预约 · 状态卡片</div></div>
-    <div class="shot"><img src="images/shop-booking-agent/04-slots.png" alt="档期管理" loading="lazy"><div class="cap"><span class="no">04</span>档期管理</div></div>
-    <div class="shot"><img src="images/shop-booking-agent/05-items.png" alt="服务项目" loading="lazy"><div class="cap"><span class="no">05</span>服务项目管理</div></div>
-    <div class="shot"><img src="images/shop-booking-agent/06-knowledge.png" alt="商家知识库" loading="lazy"><div class="cap"><span class="no">06</span>商家知识库维护</div></div>
+    <div class="shot"><div class="pic"><img src="images/shop-booking-agent/thumb/01-chat-booking.jpg" data-full="images/shop-booking-agent/01-chat-booking.jpg" alt="AI 对话预约全流程" loading="lazy" decoding="async"><span class="tall-mark">长图</span></div><div class="cap"><span class="no">01</span>智能对话 · AI 预约全流程（查位→锁座→确认）</div></div>
+    <div class="shot"><div class="pic"><img src="images/shop-booking-agent/thumb/02-chat-knowledge.jpg" data-full="images/shop-booking-agent/02-chat-knowledge.jpg" alt="AI 知识问答" loading="lazy" decoding="async"></div><div class="cap"><span class="no">02</span>AI 知识问答 · 常见咨询</div></div>
+    <div class="shot"><div class="pic"><img src="images/shop-booking-agent/thumb/03-my-bookings.jpg" data-full="images/shop-booking-agent/03-my-bookings.jpg" alt="我的预约" loading="lazy" decoding="async"></div><div class="cap"><span class="no">03</span>我的预约 · 状态卡片</div></div>
+    <div class="shot"><div class="pic"><img src="images/shop-booking-agent/thumb/04-admin-dashboard.jpg" data-full="images/shop-booking-agent/04-admin-dashboard.jpg" alt="经营看板" loading="lazy" decoding="async"></div><div class="cap"><span class="no">04</span>老板端 · 经营看板</div></div>
+    <div class="shot"><div class="pic"><img src="images/shop-booking-agent/thumb/05-admin-bookings.jpg" data-full="images/shop-booking-agent/05-admin-bookings.jpg" alt="预约管理" loading="lazy" decoding="async"></div><div class="cap"><span class="no">05</span>老板端 · 预约管理</div></div>
+    <div class="shot"><div class="pic"><img src="images/shop-booking-agent/thumb/06-admin-slots.jpg" data-full="images/shop-booking-agent/06-admin-slots.jpg" alt="档期日历" loading="lazy" decoding="async"></div><div class="cap"><span class="no">06</span>老板端 · 档期日历</div></div>
+    <div class="shot"><div class="pic"><img src="images/shop-booking-agent/thumb/07-admin-items.jpg" data-full="images/shop-booking-agent/07-admin-items.jpg" alt="服务项目管理" loading="lazy" decoding="async"></div><div class="cap"><span class="no">07</span>老板端 · 服务项目管理</div></div>
+    <div class="shot"><div class="pic"><img src="images/shop-booking-agent/thumb/08-admin-knowledge.jpg" data-full="images/shop-booking-agent/08-admin-knowledge.jpg" alt="知识库维护" loading="lazy" decoding="async"></div><div class="cap"><span class="no">08</span>老板端 · 知识库维护</div></div>
+    <div class="shot"><div class="pic"><img src="images/shop-booking-agent/thumb/09-admin-escalations.jpg" data-full="images/shop-booking-agent/09-admin-escalations.jpg" alt="转人工工单" loading="lazy" decoding="async"></div><div class="cap"><span class="no">09</span>老板端 · 转人工工单</div></div>
+    <div class="shot"><div class="pic"><img src="images/shop-booking-agent/thumb/10-admin-settings.jpg" data-full="images/shop-booking-agent/10-admin-settings.jpg" alt="店铺设置" loading="lazy" decoding="async"><span class="tall-mark">长图</span></div><div class="cap"><span class="no">10</span>老板端 · 店铺设置</div></div>
   </div>
 </section>
 
@@ -207,31 +218,37 @@
 <div class="lb" id="lb">
   <button class="close" onclick="lbClose()" aria-label="关闭">×</button>
   <button class="prev" onclick="lbStep(-1)" aria-label="上一张">‹</button>
-  <img id="lbImg" src="" alt="">
-  <div class="lb-cap" id="lbCap"></div>
+  <div class="lb-scroll" id="lbScroll">
+    <img id="lbImg" src="" alt="">
+    <div class="lb-cap" id="lbCap"></div>
+  </div>
   <button class="next" onclick="lbStep(1)" aria-label="下一张">›</button>
 </div>
 
 <script>
-  var shots = [];
+  var groups = [];
   document.querySelectorAll('.grid').forEach(function (grid) {
     var items = [];
     grid.querySelectorAll('.shot').forEach(function (el) {
-      items.push({ src: el.querySelector('img').src, cap: el.querySelector('.cap').textContent.trim() });
-      el.addEventListener('click', function () { lbOpen(items, items.findIndex(function (it) { return it.src === el.querySelector('img').src; })); });
+      var img = el.querySelector('img');
+      items.push({ src: img.getAttribute('data-full') || img.src, cap: el.querySelector('.cap').textContent.trim() });
+      el.addEventListener('click', function () {
+        lbOpen(items, items.findIndex(function (it) { return it.src === (img.getAttribute('data-full') || img.src); }));
+      });
     });
-    shots.push(items);
+    groups.push(items);
   });
 
-  var cur = null, curList = [];
+  var cur = 0, curList = [];
   function lbOpen(list, idx) { curList = list; cur = idx; lbShow(); document.getElementById('lb').classList.add('open'); document.body.style.overflow = 'hidden'; }
   function lbShow() {
+    var scroller = document.getElementById('lbScroll');
+    scroller.scrollTop = 0;
     document.getElementById('lbImg').src = curList[cur].src;
-    document.getElementById('lbCap').textContent = curList[cur].cap + '（' + (cur + 1) + ' / ' + curList.length + '）';
+    document.getElementById('lbCap').textContent = curList[cur].cap + '（' + (cur + 1) + ' / ' + curList.length + '）· 长图可上下滑动';
   }
   function lbClose() { document.getElementById('lb').classList.remove('open'); document.body.style.overflow = ''; }
   function lbStep(d) { cur = (cur + d + curList.length) % curList.length; lbShow(); }
-  document.getElementById('lb').addEventListener('click', function (e) { if (e.target === this) lbClose(); });
   document.addEventListener('keydown', function (e) {
     if (!document.getElementById('lb').classList.contains('open')) return;
     if (e.key === 'Escape') lbClose();

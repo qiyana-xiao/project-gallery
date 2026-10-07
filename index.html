@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>项目作品集 · UI 设计展示</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    background: #f5f7fa;
+    color: #24292f;
+    line-height: 1.6;
+  }
+  a { color: inherit; }
+
+  .topbar {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(255,255,255,.88);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(0,0,0,.06);
+  }
+  .topbar-inner {
+    max-width: 1180px; margin: 0 auto; padding: 14px 24px;
+    display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+  }
+  .topbar h1 { font-size: 17px; font-weight: 700; letter-spacing: .5px; }
+  .topbar h1 span { color: #6b7280; font-weight: 400; font-size: 13px; margin-left: 10px; }
+  .topnav { display: flex; gap: 8px; flex-wrap: wrap; }
+  .topnav a {
+    text-decoration: none; font-size: 14px; padding: 6px 16px; border-radius: 999px;
+    border: 1px solid rgba(0,0,0,.08); color: #374151; transition: all .2s;
+  }
+  .topnav a:hover { background: #eef2ff; border-color: #c7d2fe; color: #4338ca; font-weight: 600; }
+
+  .hero { max-width: 1180px; margin: 0 auto; padding: 56px 24px 20px; text-align: center; }
+  .hero h2 { font-size: 32px; font-weight: 800; letter-spacing: 1px; }
+  .hero p { margin-top: 12px; color: #6b7280; font-size: 15px; }
+
+  .section { max-width: 1180px; margin: 0 auto; padding: 48px 24px 8px; }
+  .proj-head { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; }
+  .proj-index {
+    font-size: 13px; font-weight: 700; color: #fff; border-radius: 8px;
+    padding: 3px 10px; letter-spacing: 1px;
+  }
+  .proj-head h3 { font-size: 26px; font-weight: 800; }
+  .proj-head .repo { font-size: 13px; color: #6b7280; }
+  .proj-desc { margin-top: 10px; color: #4b5563; font-size: 15px; max-width: 860px; }
+  .chips { margin-top: 14px; display: flex; gap: 8px; flex-wrap: wrap; }
+  .chip {
+    font-size: 12.5px; padding: 4px 12px; border-radius: 999px;
+    background: #fff; border: 1px solid rgba(0,0,0,.08); color: #374151;
+  }
+
+  .collage-wrap { margin-top: 24px; }
+  .collage-wrap img {
+    width: 100%; border-radius: 16px; display: block;
+    box-shadow: 0 10px 30px rgba(0,0,0,.10);
+  }
+
+  .grid {
+    margin-top: 28px; margin-bottom: 40px;
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px;
+  }
+  @media (max-width: 900px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 600px) { .grid { grid-template-columns: 1fr; } }
+  .shot {
+    background: #fff; border-radius: 14px; overflow: hidden; cursor: zoom-in;
+    border: 1px solid rgba(0,0,0,.06);
+    box-shadow: 0 2px 10px rgba(0,0,0,.05);
+    transition: transform .2s, box-shadow .2s;
+  }
+  .shot:hover { transform: translateY(-4px); box-shadow: 0 10px 24px rgba(0,0,0,.12); }
+  .shot img { width: 100%; aspect-ratio: 4/3; object-fit: cover; object-position: top; display: block; }
+  .shot .cap { padding: 10px 14px; font-size: 13.5px; color: #374151; display: flex; align-items: center; gap: 8px; }
+  .shot .cap .no { font-weight: 700; font-size: 12px; opacity: .55; }
+
+  footer {
+    max-width: 1180px; margin: 40px auto 0; padding: 28px 24px 48px;
+    border-top: 1px solid rgba(0,0,0,.08); color: #6b7280; font-size: 14px;
+    display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+  }
+  footer .links a { margin-right: 16px; text-decoration: none; color: #4f46e5; }
+  footer .links a:hover { text-decoration: underline; }
+
+  /* lightbox */
+  .lb {
+    position: fixed; inset: 0; z-index: 100; background: rgba(17,24,39,.92);
+    display: none; align-items: center; justify-content: center; flex-direction: column; padding: 24px;
+  }
+  .lb.open { display: flex; }
+  .lb img { max-width: 92vw; max-height: 78vh; border-radius: 12px; box-shadow: 0 20px 60px rgba(0,0,0,.5); }
+  .lb .lb-cap { color: #e5e7eb; margin-top: 16px; font-size: 15px; letter-spacing: .5px; }
+  .lb button {
+    position: absolute; background: rgba(255,255,255,.12); color: #fff; border: none;
+    border-radius: 50%; width: 46px; height: 46px; font-size: 20px; cursor: pointer; transition: background .2s;
+  }
+  .lb button:hover { background: rgba(255,255,255,.28); }
+  .lb .close { top: 20px; right: 24px; }
+  .lb .prev { left: 20px; top: 50%; transform: translateY(-50%); }
+  .lb .next { right: 20px; top: 50%; transform: translateY(-50%); }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <h1>项目作品集<span>UI 设计展示</span></h1>
+    <nav class="topnav">
+      <a href="#medication-radar">用药雷达</a>
+      <a href="#certificates-manager">证件管家</a>
+      <a href="#shop-booking-agent">店小约</a>
+    </nav>
+  </div>
+</div>
+
+<header class="hero">
+  <h2>三个完整项目 · 界面设计与功能展示</h2>
+  <p>扫码即可浏览各项目核心界面。所有界面均为真实运行的系统截图，点击任意图片可放大查看。</p>
+</header>
+
+<!-- ==================== 项目一：用药雷达 ==================== -->
+<section class="section" id="medication-radar">
+  <div class="proj-head">
+    <span class="proj-index" style="background:#0d9488;">项目 01</span>
+    <h3>用药雷达</h3>
+    <span class="repo">medication-radar</span>
+  </div>
+  <p class="proj-desc">面向老年群体的多重用药安全分析平台。输入正在服用的药品与健康状况，自动分析药物相互作用、重复用药与禁忌风险，生成分级风险报告；支持患者 / 医生 / 管理员三种角色，配套药品知识库与健康时间线。</p>
+  <div class="chips">
+    <span class="chip">React</span><span class="chip">FastAPI</span><span class="chip">MySQL</span><span class="chip">JWT 认证</span><span class="chip">药物相互作用引擎</span>
+  </div>
+  <div class="collage-wrap">
+    <img src="images/medication-radar.png" alt="用药雷达界面拼图" loading="lazy">
+  </div>
+  <div class="grid" data-repo="medication-radar">
+    <div class="shot"><img src="images/medication-radar/01-welcome.png" alt="欢迎页" loading="lazy"><div class="cap"><span class="no">01</span>欢迎页 · 产品介绍</div></div>
+    <div class="shot"><img src="images/medication-radar/02-analyze-form.png" alt="用药分析表单" loading="lazy"><div class="cap"><span class="no">02</span>用药分析 · 信息填写</div></div>
+    <div class="shot"><img src="images/medication-radar/03-report-patient.png" alt="分析报告患者视图" loading="lazy"><div class="cap"><span class="no">03</span>分析报告 · 患者视图</div></div>
+    <div class="shot"><img src="images/medication-radar/04-report-doctor.png" alt="分析报告医生视图" loading="lazy"><div class="cap"><span class="no">04</span>分析报告 · 医生专业视图</div></div>
+    <div class="shot"><img src="images/medication-radar/05-login.png" alt="登录注册" loading="lazy"><div class="cap"><span class="no">05</span>登录 / 注册</div></div>
+    <div class="shot"><img src="images/medication-radar/06-history.png" alt="历史报告" loading="lazy"><div class="cap"><span class="no">06</span>历史报告列表</div></div>
+    <div class="shot"><img src="images/medication-radar/07-knowledge.png" alt="药品知识库" loading="lazy"><div class="cap"><span class="no">07</span>药品知识库</div></div>
+    <div class="shot"><img src="images/medication-radar/08-timeline.png" alt="健康时间线" loading="lazy"><div class="cap"><span class="no">08</span>健康时间线</div></div>
+    <div class="shot"><img src="images/medication-radar/09-drug-detail.png" alt="药品详情" loading="lazy"><div class="cap"><span class="no">09</span>药品详情页</div></div>
+  </div>
+</section>
+
+<!-- ==================== 项目二：证件管家 ==================== -->
+<section class="section" id="certificates-manager">
+  <div class="proj-head">
+    <span class="proj-index" style="background:#2563eb;">项目 02</span>
+    <h3>证件管家</h3>
+    <span class="repo">certificates-Manager</span>
+  </div>
+  <p class="proj-desc">证件有效期管理与续办提醒工具。集中管理身份证、护照、驾驶证等各类证件，自动计算到期日并分级预警；内置覆盖全国 31 个省级行政区（含港澳台）的官方续办指南，一键直达各省政务门户。</p>
+  <div class="chips">
+    <span class="chip">Vue 3</span><span class="chip">FastAPI</span><span class="chip">MySQL</span><span class="chip">JWT 认证</span><span class="chip">AES-256-GCM 加密</span>
+  </div>
+  <div class="collage-wrap">
+    <img src="images/certificates-Manager.png" alt="证件管家界面拼图" loading="lazy">
+  </div>
+  <div class="grid" data-repo="certificates-Manager">
+    <div class="shot"><img src="images/certificates-Manager/01-login.png" alt="登录页" loading="lazy"><div class="cap"><span class="no">01</span>登录 / 注册</div></div>
+    <div class="shot"><img src="images/certificates-Manager/02-dashboard.png" alt="仪表盘" loading="lazy"><div class="cap"><span class="no">02</span>证件总览仪表盘</div></div>
+    <div class="shot"><img src="images/certificates-Manager/03-documents.png" alt="证件管理" loading="lazy"><div class="cap"><span class="no">03</span>我的证件 · 智能筛选</div></div>
+    <div class="shot"><img src="images/certificates-Manager/04-calendar.png" alt="续办日历" loading="lazy"><div class="cap"><span class="no">04</span>续办日历</div></div>
+    <div class="shot"><img src="images/certificates-Manager/05-reminders.png" alt="提醒中心" loading="lazy"><div class="cap"><span class="no">05</span>提醒中心</div></div>
+    <div class="shot"><img src="images/certificates-Manager/06-guides.png" alt="办理指南" loading="lazy"><div class="cap"><span class="no">06</span>全国续办办理指南</div></div>
+  </div>
+</section>
+
+<!-- ==================== 项目三：店小约 ==================== -->
+<section class="section" id="shop-booking-agent">
+  <div class="proj-head">
+    <span class="proj-index" style="background:#ea580c;">项目 03</span>
+    <h3>店小约</h3>
+    <span class="repo">shop-booking-agent</span>
+  </div>
+  <p class="proj-desc">面向小微商户的 AI 预约助手。顾客通过自然语言对话即可完成预约，系统自动匹配档期并生成预约单；商家端提供经营看板、档期管理、预约列表与服务项目配置，内置知识库让 AI 客服回答店铺常见问题。</p>
+  <div class="chips">
+    <span class="chip">Vue 3</span><span class="chip">Spring Boot</span><span class="chip">MySQL</span><span class="chip">Redis</span><span class="chip">LLM 智能对话</span>
+  </div>
+  <div class="collage-wrap">
+    <img src="images/shop-booking-agent.png" alt="店小约界面拼图" loading="lazy">
+  </div>
+  <div class="grid" data-repo="shop-booking-agent">
+    <div class="shot"><img src="images/shop-booking-agent/01-chat.png" alt="顾客对话" loading="lazy"><div class="cap"><span class="no">01</span>顾客对话入口 · AI 预约</div></div>
+    <div class="shot"><img src="images/shop-booking-agent/02-login.png" alt="商家登录" loading="lazy"><div class="cap"><span class="no">02</span>商家登录</div></div>
+    <div class="shot"><img src="images/shop-booking-agent/03-dashboard.png" alt="经营看板" loading="lazy"><div class="cap"><span class="no">03</span>经营数据看板</div></div>
+    <div class="shot"><img src="images/shop-booking-agent/04-slots.png" alt="档期管理" loading="lazy"><div class="cap"><span class="no">04</span>档期管理</div></div>
+    <div class="shot"><img src="images/shop-booking-agent/05-bookings.png" alt="预约列表" loading="lazy"><div class="cap"><span class="no">05</span>预约列表</div></div>
+    <div class="shot"><img src="images/shop-booking-agent/06-items.png" alt="服务项目" loading="lazy"><div class="cap"><span class="no">06</span>服务项目管理</div></div>
+    <div class="shot"><img src="images/shop-booking-agent/07-knowledge.png" alt="知识库" loading="lazy"><div class="cap"><span class="no">07</span>智能知识库</div></div>
+  </div>
+</section>
+
+<footer>
+  <div>项目作品集 · 界面均为真实运行系统截图</div>
+  <div class="links">
+    <a href="https://github.com/qiyana-xiao/medication-radar" target="_blank">用药雷达仓库</a>
+    <a href="https://github.com/qiyana-xiao/certificates-Manager" target="_blank">证件管家仓库</a>
+    <a href="https://github.com/qiyana-xiao/shop-booking-agent" target="_blank">店小约仓库</a>
+  </div>
+</footer>
+
+<div class="lb" id="lb">
+  <button class="close" onclick="lbClose()" aria-label="关闭">×</button>
+  <button class="prev" onclick="lbStep(-1)" aria-label="上一张">‹</button>
+  <img id="lbImg" src="" alt="">
+  <div class="lb-cap" id="lbCap"></div>
+  <button class="next" onclick="lbStep(1)" aria-label="下一张">›</button>
+</div>
+
+<script>
+  var shots = [];
+  document.querySelectorAll('.grid').forEach(function (grid) {
+    var items = [];
+    grid.querySelectorAll('.shot').forEach(function (el) {
+      items.push({ src: el.querySelector('img').src, cap: el.querySelector('.cap').textContent.trim() });
+      el.addEventListener('click', function () { lbOpen(items, items.findIndex(function (it) { return it.src === el.querySelector('img').src; })); });
+    });
+    shots.push(items);
+  });
+
+  var cur = null, curList = [];
+  function lbOpen(list, idx) { curList = list; cur = idx; lbShow(); document.getElementById('lb').classList.add('open'); document.body.style.overflow = 'hidden'; }
+  function lbShow() {
+    document.getElementById('lbImg').src = curList[cur].src;
+    document.getElementById('lbCap').textContent = curList[cur].cap + '（' + (cur + 1) + ' / ' + curList.length + '）';
+  }
+  function lbClose() { document.getElementById('lb').classList.remove('open'); document.body.style.overflow = ''; }
+  function lbStep(d) { cur = (cur + d + curList.length) % curList.length; lbShow(); }
+  document.getElementById('lb').addEventListener('click', function (e) { if (e.target === this) lbClose(); });
+  document.addEventListener('keydown', function (e) {
+    if (!document.getElementById('lb').classList.contains('open')) return;
+    if (e.key === 'Escape') lbClose();
+    if (e.key === 'ArrowLeft') lbStep(-1);
+    if (e.key === 'ArrowRight') lbStep(1);
+  });
+</script>
+</body>
+</html>
